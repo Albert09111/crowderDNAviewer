@@ -27,6 +27,7 @@ lights[0] = new THREE.PointLight( 0xffffff, 1, 0 );
 lights[1] = new THREE.PointLight( 0xffffff, 1, 0 );
 lights[2] = new THREE.PointLight( 0xffffff, 1, 0 );
 
+
 lights[0].position.set( 0, 200, 0 );
 lights[1].position.set( 100, 200, 100 );
 lights[2].position.set( - 100, - 200, - 100 );
@@ -40,7 +41,9 @@ var backbone_geometry = new THREE.SphereGeometry(.2,10,10);
 var nucleoside_geometry = new THREE.SphereGeometry(.3,10,10).applyMatrix(
         new THREE.Matrix4().makeScale( 0.7, 0.3, 0.7 ));
 var connector_geometry = new THREE.CylinderGeometry(.1,.1,1);
-var crowder_geometry = new THREE.SphereGeometry(.2,10,10)
+
+// Define crowder size in the dataset.
+var crowder_geometry = new THREE.SphereGeometry(0.8,100,100)
 
 // define strand colors 
 var backbone_materials = [
@@ -358,8 +361,6 @@ target.addEventListener("drop", function(event) {
             var con = new THREE.Mesh( connector_geometry, strand_to_material[i] );
             con.applyMatrix(new THREE.Matrix4().makeScale(1.0, con_len, 1.0));
             
-            console.log(i)
-            
             //rotate the nucleoside and the cylinders to align with model
             nucleoside.applyMatrix(rotationX);
             nucleoside.applyMatrix(rotationY);
@@ -385,7 +386,7 @@ target.addEventListener("drop", function(event) {
                     let x_sp = (x_bb + x_bb_last)/2,
                         y_sp = (y_bb + y_bb_last)/2,
                         z_sp = (z_bb + z_bb_last)/2;
-                    
+
                     let sp_len = Math.sqrt(Math.pow(x_bb-x_bb_last,2)+Math.pow(y_bb-y_bb_last,2)+Math.pow(z_bb-z_bb_last,2));
 
                     var rotation_sp = new THREE.Matrix4().makeRotationFromQuaternion(
@@ -410,9 +411,9 @@ target.addEventListener("drop", function(event) {
             }
             
             else {
-                backbones.push(backbone);
-                backbone.position.set(x_bb, y_bb, z_bb); 
-                scene.add(backbone);
+                var crowder = new THREE.Mesh(crowder_geometry,crowder_materials);
+                crowder.position.set(x_bb,y_bb,z_bb);
+                scene.add(crowder)
             }
 
         });
