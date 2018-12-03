@@ -89,14 +89,14 @@ var backbone_materials = [
 var nucleoside_materials = [
     new THREE.MeshLambertMaterial({
         //color: 0x3333FF,
-        color: 0x888888,
+        color: 0xDA9100,
         //emissive: 0x072534,
         side: THREE.DoubleSide,
         //flatShading: true
     }),
     new THREE.MeshLambertMaterial({
         //color: 0xFFFF33,
-        color: 0x888888,
+        color: 0x00FF00,
         //emissive: 0x072534,
         side: THREE.DoubleSide,
         //flatShading: true
@@ -110,7 +110,7 @@ var nucleoside_materials = [
     }),
     new THREE.MeshLambertMaterial({
         //color: 0xFF3333,
-        color: 0x888888,
+        color: 0x156289,
         //emissive: 0x072534,
         side: THREE.DoubleSide,
         //flatShading: true
@@ -228,22 +228,33 @@ target.addEventListener("drop", function(event) {
                 let base = l[1]; // get base id
                 //if we meet a U we have an RNA 
 
+                base_type = ['A','T','G','C'];
+
                 if(base === "U"){
                     RNA_MODE = true;
                 }
 
-                else if (base=="-1"){
+                if (base=="-1"){
                     crowder_to_material[i] = crowder_materials;
                     crowder_id.push(i)
                 }
 
                 else{
-                    // create a lookup for
-                    // coloring base according to base id
                     base_id.push(i)
-                    base_to_material[i] = nucleoside_materials[base_to_num[base]];
-                    // coloring bases according to strand id 
-                    strand_to_material[i] = backbone_materials[Math.floor(id % backbone_materials.length )];
+                    if (include(base_type,base)){
+                        base_to_material[i] = nucleoside_materials[base_to_num[base]];
+                        // coloring bases according to strand id 
+                        strand_to_material[i] = backbone_materials[Math.floor(id % backbone_materials.length )];     
+                    }
+                    else{
+                        
+                        base_letter = base_type[Math.abs(parseInt(base)%4)];
+                        console.log(base_letter)
+                        base_to_material[i] = nucleoside_materials[base_to_num[base_letter]];
+                        // coloring bases according to strand id 
+                        strand_to_material[i] = backbone_materials[Math.floor(id % backbone_materials.length )];
+                    }
+
                 }
             });
         
@@ -428,6 +439,12 @@ target.addEventListener("drop", function(event) {
 
 // update the scene
 render();
+
+function include(arr, obj) {
+    for(var i=0; i<arr.length; i++) {
+        if (arr[i] == obj) return true;
+    }
+}
 
 function cross (a1,a2,a3,b1,b2,b3) {
     return [ a2 * b3 - a3 * b2, 
