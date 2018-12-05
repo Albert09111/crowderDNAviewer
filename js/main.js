@@ -37,8 +37,8 @@ scene.add( lights[1] );
 scene.add( lights[2] );
 
 // base geometry 
-var backbone_geometry = new THREE.SphereGeometry(.2,10,10);
-var nucleoside_geometry = new THREE.SphereGeometry(.3,10,10).applyMatrix(
+var backbone_geometry = new THREE.SphereGeometry(.2,50,50);
+var nucleoside_geometry = new THREE.SphereGeometry(.3,50,50).applyMatrix(
         new THREE.Matrix4().makeScale( 0.7, 0.3, 0.7 ));
 var connector_geometry = new THREE.CylinderGeometry(.1,.1,1);
 
@@ -366,6 +366,10 @@ target.addEventListener("drop", function(event) {
                 )
             );
             
+            // rotate the base to make stack well.
+            let base_rotation = new THREE.Matrix4().makeRotationFromQuaternion(//create base sphere rotation
+                new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), new THREE.Vector3(x_a3, y_a3, z_a3)));
+            
             // adds a new "backbone", new "nucleoside", and new "connector" to the scene
             var backbone = new THREE.Mesh( backbone_geometry, strand_to_material[i]);
             var nucleoside = new THREE.Mesh( nucleoside_geometry, base_to_material[i]);
@@ -373,8 +377,7 @@ target.addEventListener("drop", function(event) {
             con.applyMatrix(new THREE.Matrix4().makeScale(1.0, con_len, 1.0));
             
             //rotate the nucleoside and the cylinders to align with model
-            nucleoside.applyMatrix(rotationX);
-            nucleoside.applyMatrix(rotationY);
+            nucleoside.applyMatrix(base_rotation);
             con.applyMatrix(rotation_con);
             
             if (i < base_id[base_id.length-1]+1){
