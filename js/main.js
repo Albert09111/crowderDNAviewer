@@ -17,16 +17,10 @@ var renderer = new THREE.WebGLRenderer({
 renderer.setSize( window.innerWidth, window.innerHeight );
 document.body.appendChild( renderer.domElement );
 
-// set scene lighting 
-//var light = new THREE.AmbientLight(0x404040);
-//light.intensity = 3;
-//scene.add(light);
-
 var lights = [];
 lights[0] = new THREE.PointLight( 0xffffff, 1, 0 );
 lights[1] = new THREE.PointLight( 0xffffff, 1, 0 );
 lights[2] = new THREE.PointLight( 0xffffff, 1, 0 );
-
 
 lights[0].position.set( 0, 200, 0 );
 lights[1].position.set( 100, 200, 100 );
@@ -43,7 +37,7 @@ var nucleoside_geometry = new THREE.SphereGeometry(.3,50,50).applyMatrix(
 var connector_geometry = new THREE.CylinderGeometry(.1,.1,1);
 
 // Define crowder size in the dataset.
-var crowder_geometry = new THREE.SphereGeometry(0.8,100,100)
+var crowder_geometry = new THREE.SphereGeometry(0.8*2,100,100)
 
 // define strand colors 
 var backbone_materials = [
@@ -89,28 +83,28 @@ var backbone_materials = [
 var nucleoside_materials = [
     new THREE.MeshLambertMaterial({
         //color: 0x3333FF,
-        color: 0xDA9100,
+        color: 0x575adb,
         //emissive: 0x072534,
         side: THREE.DoubleSide,
         //flatShading: true
     }),
     new THREE.MeshLambertMaterial({
         //color: 0xFFFF33,
-        color: 0x00FF00,
+        color: 0x575adb,
         //emissive: 0x072534,
         side: THREE.DoubleSide,
         //flatShading: true
     }),
     new THREE.MeshLambertMaterial({
         //color: 0x33FF33,
-        color: 0x888888,
+        color: 0x575adb,
         //emissive: 0x072534,
         side: THREE.DoubleSide,
         //flatShading: true
     }),
     new THREE.MeshLambertMaterial({
         //color: 0xFF3333,
-        color: 0x156289,
+        color: 0x575adb,
         //emissive: 0x072534,
         side: THREE.DoubleSide,
         //flatShading: true
@@ -180,7 +174,6 @@ var base_to_num = {
 var base_id = [];
 var crowder_id  = [];
 
-
 // define the drag and drop behavior of the scene 
 var target = renderer.domElement; // create javascript DOM object
 
@@ -249,10 +242,11 @@ target.addEventListener("drop", function(event) {
                     else{
                         
                         base_letter = base_type[Math.abs(parseInt(base)%4)];
-                        console.log(base_letter)
                         base_to_material[i] = nucleoside_materials[base_to_num[base_letter]];
                         // coloring bases according to strand id 
                         strand_to_material[i] = backbone_materials[Math.floor(id % backbone_materials.length )];
+                        console.log(base_letter,base_to_num[base_letter])
+
                     }
 
                 }
@@ -408,6 +402,7 @@ target.addEventListener("drop", function(event) {
                             new THREE.Vector3(0,1,0), new THREE.Vector3(x_sp-x_bb, y_sp-y_bb, z_sp-z_bb).normalize()
                         )
                     );
+
                     var sp = new THREE.Mesh(connector_geometry, strand_to_material[i] );
                     sp.applyMatrix(new THREE.Matrix4().makeScale(1.0, sp_len, 1.0));
                     sp.applyMatrix(rotation_sp);
@@ -434,7 +429,6 @@ target.addEventListener("drop", function(event) {
         // update the scene
         render();
     };
-
     // execute the read operation 
     dat_reader.readAsText(dat_file);
 
