@@ -31,13 +31,13 @@ scene.add( lights[1] );
 scene.add( lights[2] );
 
 // base geometry 
-var backbone_geometry = new THREE.SphereGeometry(.2,50,50);
-var nucleoside_geometry = new THREE.SphereGeometry(.3,50,50).applyMatrix(
+var backbone_geometry = new THREE.SphereGeometry(0.2,50,50);
+var nucleoside_geometry = new THREE.SphereGeometry(0.3,50,50).applyMatrix(
         new THREE.Matrix4().makeScale( 0.7, 0.3, 0.7 ));
 var connector_geometry = new THREE.CylinderGeometry(.1,.1,1);
 
 // Define crowder size in the dataset.
-var crowder_geometry = new THREE.SphereGeometry(0.8*2,100,100)
+var crowder_geometry = new THREE.SphereGeometry(0.6,100,100)
 
 // define strand colors 
 var backbone_materials = [
@@ -221,6 +221,8 @@ target.addEventListener("drop", function(event) {
                 let base = l[1]; // get base id
                 //if we meet a U we have an RNA 
 
+                //console.log(base);
+
                 base_type = ['A','T','G','C'];
 
                 if(base === "U"){
@@ -233,6 +235,7 @@ target.addEventListener("drop", function(event) {
                 }
 
                 else{
+
                     base_id.push(i)
                     if (include(base_type,base)){
                         base_to_material[i] = nucleoside_materials[base_to_num[base]];
@@ -242,10 +245,11 @@ target.addEventListener("drop", function(event) {
                     else{
                         
                         base_letter = base_type[Math.abs(parseInt(base)%4)];
+                        console.log(Math.abs(parseInt(base)%4))
                         base_to_material[i] = nucleoside_materials[base_to_num[base_letter]];
                         // coloring bases according to strand id 
                         strand_to_material[i] = backbone_materials[Math.floor(id % backbone_materials.length )];
-                        console.log(base_letter,base_to_num[base_letter])
+                        //console.log(base_letter,base_to_num[base_letter])
 
                     }
 
@@ -345,7 +349,7 @@ target.addEventListener("drop", function(event) {
 
             //compute connector length
             let con_len = Math.sqrt(Math.pow(x_bb-x_ns,2)+Math.pow(y_bb-y_ns,2)+Math.pow(z_bb-z_ns,2));
-
+            
             // let's have some fun with quaternions...
             var rotationX = new THREE.Matrix4().makeRotationFromQuaternion(
                 new THREE.Quaternion().setFromUnitVectors(
