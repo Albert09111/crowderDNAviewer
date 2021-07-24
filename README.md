@@ -4,7 +4,7 @@
 
 See published paper:
 [Understanding DNA interactions in crowded
-environments with a coarse-grained model](https://academic.oup.com/nar/article/48/19/10726/5921301)
+environments with a coarse-grained model,NAR,48,10726–10738](https://academic.oup.com/nar/article/48/19/10726/5921301)
 
 
 ![image](screen_shot.png)
